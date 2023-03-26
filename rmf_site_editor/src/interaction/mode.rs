@@ -81,7 +81,7 @@ impl InteractionMode {
 
 #[derive(SystemParam)]
 pub struct BackoutParams<'w, 's> {
-    select: EventWriter<'w, 's, Select>,
+    select: EventWriter<'w, Select>,
     select_anchor: SelectAnchorPlacementParams<'w, 's>,
 }
 

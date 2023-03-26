@@ -91,60 +91,59 @@ impl Plugin for StandardUiLayout {
 }
 
 #[derive(SystemParam)]
-pub struct ChangeEvents<'w, 's> {
-    pub lane_motion: EventWriter<'w, 's, Change<Motion>>,
-    pub lane_reverse: EventWriter<'w, 's, Change<ReverseLane>>,
-    pub name: EventWriter<'w, 's, Change<NameInSite>>,
-    pub label: EventWriter<'w, 's, Change<Label>>,
-    pub pose: EventWriter<'w, 's, Change<Pose>>,
-    pub door: EventWriter<'w, 's, Change<DoorType>>,
-    pub lift_cabin: EventWriter<'w, 's, Change<LiftCabin<Entity>>>,
-    pub asset_source: EventWriter<'w, 's, Change<AssetSource>>,
-    pub pixels_per_meter: EventWriter<'w, 's, Change<PixelsPerMeter>>,
-    pub physical_camera_properties: EventWriter<'w, 's, Change<PhysicalCameraProperties>>,
-    pub light: EventWriter<'w, 's, Change<LightKind>>,
-    pub level_props: EventWriter<'w, 's, Change<LevelProperties>>,
-    pub color: EventWriter<'w, 's, Change<DisplayColor>>,
-    pub visibility: EventWriter<'w, 's, Change<Visibility>>,
-    pub associated_graphs: EventWriter<'w, 's, Change<AssociatedGraphs<Entity>>>,
-    pub location_tags: EventWriter<'w, 's, Change<LocationTags>>,
+pub struct ChangeEvents<'w> {
+    pub lane_motion: EventWriter<'w, Change<Motion>>,
+    pub lane_reverse: EventWriter<'w, Change<ReverseLane>>,
+    pub name: EventWriter<'w, Change<NameInSite>>,
+    pub label: EventWriter<'w, Change<Label>>,
+    pub pose: EventWriter<'w, Change<Pose>>,
+    pub door: EventWriter<'w, Change<DoorType>>,
+    pub lift_cabin: EventWriter<'w, Change<LiftCabin<Entity>>>,
+    pub asset_source: EventWriter<'w, Change<AssetSource>>,
+    pub pixels_per_meter: EventWriter<'w, Change<PixelsPerMeter>>,
+    pub physical_camera_properties: EventWriter<'w, Change<PhysicalCameraProperties>>,
+    pub light: EventWriter<'w, Change<LightKind>>,
+    pub level_props: EventWriter<'w, Change<LevelProperties>>,
+    pub color: EventWriter<'w, Change<DisplayColor>>,
+    pub visibility: EventWriter<'w, Change<Visibility>>,
+    pub associated_graphs: EventWriter<'w, Change<AssociatedGraphs<Entity>>>,
+    pub location_tags: EventWriter<'w, Change<LocationTags>>,
 }
 
 #[derive(SystemParam)]
-pub struct PanelResources<'w, 's> {
+pub struct PanelResources<'w> {
     pub level: ResMut<'w, LevelDisplay>,
     pub nav_graph: ResMut<'w, NavGraphDisplay>,
     pub light: ResMut<'w, LightDisplay>,
     pub occupancy: ResMut<'w, OccupancyDisplay>,
-    _ignore: Query<'w, 's, ()>,
 }
 
 #[derive(SystemParam)]
-pub struct Requests<'w, 's> {
+pub struct Requests<'w> {
     pub hover: ResMut<'w, Events<Hover>>,
     pub select: ResMut<'w, Events<Select>>,
-    pub move_to: EventWriter<'w, 's, MoveTo>,
+    pub move_to: EventWriter<'w, MoveTo>,
     pub current_level: ResMut<'w, CurrentLevel>,
     pub current_site: ResMut<'w, CurrentSite>,
     pub change_mode: ResMut<'w, Events<ChangeMode>>,
-    pub delete: EventWriter<'w, 's, Delete>,
-    pub toggle_door_levels: EventWriter<'w, 's, ToggleLiftDoorAvailability>,
+    pub delete: EventWriter<'w, Delete>,
+    pub toggle_door_levels: EventWriter<'w, ToggleLiftDoorAvailability>,
     pub toggle_headlights: ResMut<'w, HeadlightToggle>,
     pub toggle_physical_lights: ResMut<'w, PhysicalLightToggle>,
-    pub spawn_preview: EventWriter<'w, 's, SpawnPreview>,
-    pub export_lights: EventWriter<'w, 's, ExportLights>,
-    pub save_nav_graphs: EventWriter<'w, 's, SaveNavGraphs>,
-    pub calculate_grid: EventWriter<'w, 's, CalculateGrid>,
-    pub consider_tag: EventWriter<'w, 's, ConsiderLocationTag>,
-    pub consider_graph: EventWriter<'w, 's, ConsiderAssociatedGraph>,
+    pub spawn_preview: EventWriter<'w, SpawnPreview>,
+    pub export_lights: EventWriter<'w, ExportLights>,
+    pub save_nav_graphs: EventWriter<'w, SaveNavGraphs>,
+    pub calculate_grid: EventWriter<'w, CalculateGrid>,
+    pub consider_tag: EventWriter<'w, ConsiderLocationTag>,
+    pub consider_graph: EventWriter<'w, ConsiderAssociatedGraph>,
 }
 
 #[derive(SystemParam)]
-pub struct LayerEvents<'w, 's> {
-    pub floors: EventWriter<'w, 's, ChangeRank<FloorMarker>>,
-    pub drawings: EventWriter<'w, 's, ChangeRank<DrawingMarker>>,
-    pub nav_graphs: EventWriter<'w, 's, ChangeRank<NavGraphMarker>>,
-    pub change_floor_vis: EventWriter<'w, 's, Change<FloorVisibility>>,
+pub struct LayerEvents<'w> {
+    pub floors: EventWriter<'w, ChangeRank<FloorMarker>>,
+    pub drawings: EventWriter<'w, ChangeRank<DrawingMarker>>,
+    pub nav_graphs: EventWriter<'w, ChangeRank<NavGraphMarker>>,
+    pub change_floor_vis: EventWriter<'w, Change<FloorVisibility>>,
     pub global_floor_vis: ResMut<'w, FloorVisibility>,
 }
 
@@ -155,10 +154,10 @@ pub struct LayerEvents<'w, 's> {
 #[derive(SystemParam)]
 pub struct AppEvents<'w, 's> {
     pub commands: Commands<'w, 's>,
-    pub change: ChangeEvents<'w, 's>,
-    pub display: PanelResources<'w, 's>,
-    pub request: Requests<'w, 's>,
-    pub layers: LayerEvents<'w, 's>,
+    pub change: ChangeEvents<'w>,
+    pub display: PanelResources<'w>,
+    pub request: Requests<'w>,
+    pub layers: LayerEvents<'w>,
 }
 
 fn standard_ui_layout(

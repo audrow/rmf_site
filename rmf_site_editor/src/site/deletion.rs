@@ -82,7 +82,7 @@ struct DeletionParams<'w, 's> {
     selection: Res<'w, Selection>,
     current_level: ResMut<'w, CurrentLevel>,
     levels: Query<'w, 's, Entity, With<LevelProperties>>,
-    select: EventWriter<'w, 's, Select>,
+    select: EventWriter<'w, Select>,
 }
 
 pub struct DeletionPlugin;

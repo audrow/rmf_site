@@ -110,7 +110,7 @@ impl<'a, 'w, 's> InspectLayer<'a, 'w, 's> {
     fn move_layers<T: Component>(
         entity: Entity,
         icons: &Icons,
-        mover: &mut EventWriter<'w, 's, ChangeRank<T>>,
+        mover: &mut EventWriter<'w, ChangeRank<T>>,
         hover: &mut ResMut<'w, Events<Hover>>,
         ui: &mut Ui,
     ) {
