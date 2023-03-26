@@ -21,6 +21,7 @@ use bevy::{
     app::AppExit,
     prelude::*,
     tasks::{AsyncComputeTaskPool, Task},
+    window::PrimaryWindow,
 };
 use bevy_egui::{egui, EguiContext};
 use futures_lite::future;
@@ -52,7 +53,7 @@ impl Autoload {
 }
 
 fn egui_ui(
-    mut egui_context: ResMut<EguiContext>,
+    mut egui_context: Query<&mut EguiContext, With<PrimaryWindow>>,
     mut _commands: Commands,
     mut _exit: EventWriter<AppExit>,
     mut _load_site: EventWriter<LoadSite>,
@@ -67,7 +68,7 @@ fn egui_ui(
             .resizable(false)
             .title_bar(false)
             .anchor(egui::Align2::CENTER_CENTER, egui::vec2(0., 0.))
-            .show(egui_context.ctx_mut(), |ui| {
+            .show(egui_context.single_mut().get_mut(), |ui| {
                 ui.heading("Loading...");
             });
         return;
@@ -93,7 +94,7 @@ fn egui_ui(
         .resizable(false)
         .title_bar(false)
         .anchor(egui::Align2::CENTER_CENTER, egui::vec2(0., 0.))
-        .show(egui_context.ctx_mut(), |ui| {
+        .show(egui_context.single_mut().get_mut(), |ui| {
             ui.heading("Welcome to The RMF Site Editor!");
             ui.add_space(10.);
 

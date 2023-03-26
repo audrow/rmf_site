@@ -23,7 +23,6 @@ use crate::{
     site::Delete,
 };
 use bevy::prelude::*;
-use bevy_egui::EguiContext;
 
 #[derive(Debug, Clone, Copy, Resource)]
 pub struct DebugMode(pub bool);
@@ -50,7 +49,6 @@ fn handle_keyboard_input(
     mut camera_controls: ResMut<CameraControls>,
     mut cameras: Query<&mut Camera>,
     mut visibilities: Query<&mut Visibility>,
-    mut egui_context: ResMut<EguiContext>,
     mut change_mode: EventWriter<ChangeMode>,
     mut delete: EventWriter<Delete>,
     headlight_toggle: Res<HeadlightToggle>,

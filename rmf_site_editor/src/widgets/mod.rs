@@ -27,7 +27,7 @@ use crate::{
         SiteState, ToggleLiftDoorAvailability,
     },
 };
-use bevy::{ecs::system::SystemParam, prelude::*};
+use bevy::{ecs::system::SystemParam, prelude::*, window::PrimaryWindow};
 use bevy_egui::{
     egui::{self, CollapsingHeader},
     EguiContext,
@@ -161,7 +161,7 @@ pub struct AppEvents<'w, 's> {
 }
 
 fn standard_ui_layout(
-    mut egui_context: ResMut<EguiContext>,
+    mut egui_context: Query<&mut EguiContext, With<PrimaryWindow>>,
     mut picking_blocker: Option<ResMut<PickingBlockers>>,
     inspector_params: InspectorParams,
     levels: LevelParams,
@@ -172,7 +172,7 @@ fn standard_ui_layout(
 ) {
     egui::SidePanel::right("right_panel")
         .resizable(true)
-        .show(egui_context.ctx_mut(), |ui| {
+        .show(egui_context.single_mut().get_mut(), |ui| {
             egui::ScrollArea::both()
                 .auto_shrink([false, false])
                 .show(ui, |ui| {
@@ -223,7 +223,7 @@ fn standard_ui_layout(
                 });
         });
 
-    let egui_context = egui_context.ctx_mut();
+    let egui_context = egui_context.single_mut().get_mut();
     let ui_has_focus = egui_context.wants_pointer_input()
         || egui_context.wants_keyboard_input()
         || egui_context.is_pointer_over_area();
@@ -241,10 +241,10 @@ fn standard_ui_layout(
     }
 }
 
-fn init_ui_style(mut egui_context: ResMut<EguiContext>) {
+fn init_ui_style(mut egui_context: Query<&mut EguiContext, With<PrimaryWindow>>) {
     // I think the default egui dark mode text color is too dim, so this changes
     // it to a brighter white.
     let mut visuals = egui::Visuals::dark();
     visuals.override_text_color = Some(egui::Color32::from_rgb(250, 250, 250));
-    egui_context.ctx_mut().set_visuals(visuals);
+    egui_context.single_mut().get_mut().set_visuals(visuals);
 }

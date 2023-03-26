@@ -21,7 +21,7 @@ use bevy::{
         camera::{Projection, RenderTarget},
         view::RenderLayers,
     },
-    window::{PresentMode, WindowClosed},
+    window::{PresentMode, WindowClosed, WindowResolution},
 };
 
 use rmf_site_format::{NameInSite, PhysicalCameraProperties, PreviewableMarker};
@@ -54,7 +54,7 @@ fn create_camera_window(
             ..default()
         })
         .insert(Camera {
-            target: RenderTarget::Window(WindowRef::Entity(entity)),
+            target: RenderTarget::Window(Window::Entity(entity)),
             is_active: true,
             ..default()
         })
@@ -112,7 +112,7 @@ pub fn update_physical_camera_preview(
     >,
     mut camera_children: Query<&mut Projection, With<Camera>>,
 ) {
-    for (children, camera_properties, window) in updated_cameras.iter() {
+    for (children, camera_properties, window) in updated_camera_previews.iter() {
         // Update fov first
         if let Ok(mut projection) = camera_children.get_mut(children[0]) {
             if let Projection::Perspective(perspective_projection) = &mut (*projection) {
@@ -131,12 +131,12 @@ pub fn update_physical_camera_preview(
 
 pub fn handle_preview_window_close(
     mut commands: Commands,
-    preview_windows: Query<(Entity, &CameraPreviewWindow)>,
+    preview_windows: Query<(Entity, With<Window>)>,
     mut closed_windows: EventReader<WindowClosed>,
 ) {
     for closed in closed_windows.iter() {
-        for (e, window) in &preview_windows {
-            if window.0 == closed.id {
+        for e in &preview_windows {
+            if e == closed.id {
                 commands.entity(e).remove::<Window>();
             }
         }

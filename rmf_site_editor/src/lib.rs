@@ -1,4 +1,4 @@
-use bevy::{pbr::DirectionalLightShadowMap, prelude::*, render::renderer::RenderAdapterInfo};
+use bevy::{pbr::DirectionalLightShadowMap, prelude::*, render::renderer::RenderAdapterInfo, window::WindowResolution};
 use bevy_egui::EguiPlugin;
 use main_menu::MainMenuPlugin;
 // use warehouse_generator::WarehouseGeneratorPlugin;
@@ -135,12 +135,11 @@ pub fn run(command_line_args: Vec<String>) {
         app.add_plugins(
             DefaultPlugins
                 .set(WindowPlugin {
-                    window: WindowDescriptor {
+                    window: Window {
+                        resolution: WindowResolution::new(1600., 900.),
                         title: "RMF Site Editor".to_owned(),
-                        width: 1600.,
-                        height: 900.,
                         ..default()
-                    },
+                    }
                     ..default()
                 })
                 .add_before::<bevy::asset::AssetPlugin, _>(SiteAssetIoPlugin),
