@@ -48,7 +48,7 @@ fn generate_site_entities(commands: &mut Commands, site_data: &rmf_site_format::
     };
 
     let mut site_cmd = commands.spawn(SpatialBundle {
-        visibility: Visibility { is_visible: false },
+        visibility: Visibility::Hidden,
         ..default()
     });
     site_cmd
@@ -69,7 +69,7 @@ fn generate_site_entities(commands: &mut Commands, site_data: &rmf_site_format::
 
                 level_cmd
                     .insert(SpatialBundle {
-                        visibility: Visibility { is_visible: false },
+                        visibility: Visibility::Hidden,
                         ..default()
                     })
                     .insert(level_data.properties.clone())
@@ -266,7 +266,8 @@ pub fn load_site(
     mut opened_sites: ResMut<OpenSites>,
     mut load_sites: EventReader<LoadSite>,
     mut change_current_site: EventWriter<ChangeCurrentSite>,
-    mut site_display_state: ResMut<State<SiteState>>,
+    mut site_display_state: Res<State<SiteState>>,
+    mut next_site_display_state: ResMut<NextState<SiteState>>,
 ) {
     for cmd in load_sites.iter() {
         let site = generate_site_entities(&mut commands, &cmd.site);
@@ -278,8 +279,8 @@ pub fn load_site(
         if cmd.focus {
             change_current_site.send(ChangeCurrentSite { site, level: None });
 
-            if *site_display_state.current() == SiteState::Off {
-                site_display_state.set(SiteState::Display).ok();
+            if *site_display_state.0 == SiteState::Off {
+                next_site_display_state.set(SiteState::Display);
             }
         }
     }
@@ -417,7 +418,7 @@ fn generate_imported_nav_graphs(
                 }
             }
             if !already_existing {
-                params.commands.entity(anchor_group).add_children(|group| {
+                params.commands.entity(anchor_group).with_children(|group| {
                     let e_anchor = group.spawn(AnchorBundle::new(anchor.clone())).id();
                     id_to_entity.insert(*anchor_id, e_anchor);
                 });
@@ -445,7 +446,7 @@ fn generate_imported_nav_graphs(
                 }
             }
             if !already_existing {
-                params.commands.entity(level_e).add_children(|level| {
+                params.commands.entity(level_e).with_children(|level| {
                     let e_anchor = level.spawn(AnchorBundle::new(anchor.clone())).id();
                     id_to_entity.insert(*anchor_id, e_anchor);
                 });
@@ -468,7 +469,7 @@ fn generate_imported_nav_graphs(
                 }
             }
             if !already_existing {
-                params.commands.entity(into_site).add_children(|site| {
+                params.commands.entity(into_site).with_children(|site| {
                     let e_anchor = site.spawn(AnchorBundle::new(anchor.clone())).id();
                     id_to_entity.insert(*anchor_id, e_anchor);
                 });
@@ -477,7 +478,7 @@ fn generate_imported_nav_graphs(
     }
 
     for (nav_graph_id, nav_graph_data) in &from_site_data.navigation.guided.graphs {
-        params.commands.entity(into_site).add_children(|site| {
+        params.commands.entity(into_site).with_children(|site| {
             let e = site
                 .spawn(SpatialBundle::default())
                 .insert(nav_graph_data.clone())
@@ -487,14 +488,14 @@ fn generate_imported_nav_graphs(
     }
 
     for (lane_id, lane_data) in &from_site_data.navigation.guided.lanes {
-        params.commands.entity(into_site).add_children(|site| {
+        params.commands.entity(into_site).with_children(|site| {
             let e = site.spawn(lane_data.to_ecs(&id_to_entity)).id();
             id_to_entity.insert(*lane_id, e);
         });
     }
 
     for (location_id, location_data) in &from_site_data.navigation.guided.locations {
-        params.commands.entity(into_site).add_children(|site| {
+        params.commands.entity(into_site).with_children(|site| {
             let e = site.spawn(location_data.to_ecs(&id_to_entity)).id();
             id_to_entity.insert(*location_id, e);
         });

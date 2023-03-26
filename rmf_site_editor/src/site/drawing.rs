@@ -120,9 +120,8 @@ pub fn handle_loaded_drawing(
                     // will be handled by another system.
                 } else {
                     let z = drawing_layer_height(rank.get(entity).ok());
-                    let mut cmd = commands.entity(entity);
-                    let leaf = cmd.add_children(|p| {
-                        p.spawn(PbrBundle {
+                    let leaf = commands
+                        .spawn(PbrBundle {
                             mesh,
                             material: materials.add(StandardMaterial {
                                 base_color_texture: Some(handle.clone()),
@@ -131,16 +130,16 @@ pub fn handle_loaded_drawing(
                             transform: Transform::from_xyz(0.0, 0.0, z),
                             ..default()
                         })
-                        .id()
-                    });
+                        .id();
 
-                    cmd.insert(SpatialBundle {
+                    commands.entity(entity).insert(SpatialBundle {
                         transform,
                         ..default()
                     })
                     .insert(DrawingSegments { leaf })
                     .insert(Selectable::new(entity))
-                    .insert(Category::Drawing);
+                    .insert(Category::Drawing)
+                    .add_child(leaf);
                 }
             }
         }

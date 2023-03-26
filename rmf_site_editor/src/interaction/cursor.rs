@@ -129,7 +129,7 @@ impl FromWorld for Cursor {
                 transform: Transform::from_scale([0.2, 0.2, 1.].into()),
                 mesh: halo_mesh,
                 material: halo_material,
-                visibility: Visibility { is_visible: true },
+                visibility: Visibility::Inherited,
                 ..default()
             })
             .insert(Spinning::default())
@@ -140,7 +140,7 @@ impl FromWorld for Cursor {
             .spawn(PbrBundle {
                 mesh: dagger_mesh,
                 material: dagger_material,
-                visibility: Visibility { is_visible: true },
+                visibility: Visibility::Inherited,
                 ..default()
             })
             .insert(Spinning::default())
@@ -180,7 +180,7 @@ impl FromWorld for Cursor {
             .spawn(VisualCue::no_outline())
             .push_children(&[halo, dagger, level_anchor_placement, site_anchor_placement])
             .insert(SpatialBundle {
-                visibility: Visibility { is_visible: false },
+                visibility: Visibility::Hidden,
                 ..default()
             })
             .id();

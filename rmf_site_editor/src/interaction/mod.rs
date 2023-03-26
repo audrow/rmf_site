@@ -78,9 +78,10 @@ use bevy_mod_picking::{PickingPlugin, PickingSystem};
 #[derive(Default)]
 pub struct InteractionPlugin;
 
-#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Default, Hash, PartialEq, Eq, States)]
 pub enum InteractionState {
     Enable,
+    #[default]
     Disable,
 }
 
@@ -95,7 +96,7 @@ pub enum InteractionUpdateStage {
 
 impl Plugin for InteractionPlugin {
     fn build(&self, app: &mut App) {
-        app.add_state(InteractionState::Disable)
+        app.add_state::<InteractionState>()
             .add_stage_after(
                 SiteUpdateStage::AssignOrphans,
                 InteractionUpdateStage::AddVisuals,

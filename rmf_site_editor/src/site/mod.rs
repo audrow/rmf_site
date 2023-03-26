@@ -95,8 +95,9 @@ pub use rmf_site_format::*;
 
 use bevy::{prelude::*, render::view::visibility::VisibilitySystems, transform::TransformSystem};
 
-#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Default, Hash, PartialEq, Eq, States)]
 pub enum SiteState {
+    #[default]
     Off,
     Display,
 }
@@ -122,7 +123,7 @@ pub struct SitePlugin;
 
 impl Plugin for SitePlugin {
     fn build(&self, app: &mut App) {
-        app.add_state(SiteState::Off)
+        app.add_state::<SiteState>()
             .add_stage_after(
                 CoreStage::Update,
                 SiteUpdateStage::AssignOrphans,

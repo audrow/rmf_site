@@ -21,7 +21,7 @@ use bevy::{
         camera::{Projection, RenderTarget},
         view::RenderLayers,
     },
-    window::{PresentMode, WindowClosed, WindowResolution},
+    window::{PresentMode, WindowClosed, WindowRef, WindowResolution},
 };
 
 use rmf_site_format::{NameInSite, PhysicalCameraProperties, PreviewableMarker};
@@ -54,7 +54,7 @@ fn create_camera_window(
             ..default()
         })
         .insert(Camera {
-            target: RenderTarget::Window(Window::Entity(entity)),
+            target: RenderTarget::Window(WindowRef::Entity(entity)),
             is_active: true,
             ..default()
         })
@@ -122,23 +122,27 @@ pub fn update_physical_camera_preview(
                     camera_properties.horizontal_fov.radians() / aspect_ratio;
             }
         }
-        window.set_resolution(
+        window.resolution = WindowResolution::new(
             camera_properties.width as f32,
             camera_properties.height as f32,
         );
     }
 }
 
+
 pub fn handle_preview_window_close(
     mut commands: Commands,
     preview_windows: Query<(Entity, With<Window>)>,
     mut closed_windows: EventReader<WindowClosed>,
 ) {
+    //TODO(luca) I believe this is not needed anymore, check to be safe
+    /*
     for closed in closed_windows.iter() {
         for e in &preview_windows {
-            if e == closed.id {
+            if e == closed.window {
                 commands.entity(e).remove::<Window>();
             }
         }
     }
+    */
 }

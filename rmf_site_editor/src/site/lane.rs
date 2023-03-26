@@ -136,7 +136,7 @@ pub fn add_lane_visuals(
                         .spawn(PbrBundle {
                             mesh: assets.lane_end_outline.clone(),
                             transform: Transform::from_translation(-0.000_5 * Vec3::Z),
-                            visibility: Visibility { is_visible: false },
+                            visibility: Visibility::Hidden,
                             ..default()
                         })
                         .id()
@@ -153,7 +153,7 @@ pub fn add_lane_visuals(
                     mid.spawn(PbrBundle {
                         mesh: assets.lane_mid_outline.clone(),
                         transform: Transform::from_translation(-0.000_5 * Vec3::Z),
-                        visibility: Visibility { is_visible: false },
+                        visibility: Visibility::Hidden,
                         ..default()
                     })
                     .id()
@@ -170,7 +170,7 @@ pub fn add_lane_visuals(
                     end.spawn(PbrBundle {
                         mesh: assets.lane_end_outline.clone(),
                         transform: Transform::from_translation(-0.000_5 * Vec3::Z),
-                        visibility: Visibility { is_visible: false },
+                        visibility: Visibility::Hidden,
                         ..default()
                     })
                     .id()

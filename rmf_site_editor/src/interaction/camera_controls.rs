@@ -207,7 +207,7 @@ impl FromWorld for CameraControls {
                     },
                     ..default()
                 })
-                .insert(Visibility::VISIBLE)
+                .insert(Visibility::Inherited)
                 .insert(ComputedVisibility::default())
                 .insert(RenderLayers::layer(layer))
                 .id()
@@ -219,7 +219,7 @@ impl FromWorld for CameraControls {
                 projection: Projection::Perspective(Default::default()),
                 ..default()
             })
-            .insert(Visibility::VISIBLE)
+            .insert(Visibility::Inherited)
             .insert(ComputedVisibility::default())
             .insert(RenderLayers::from_layers(&[
                 GENERAL_RENDER_LAYER,
@@ -270,7 +270,7 @@ impl FromWorld for CameraControls {
                     projection: Projection::Orthographic(ortho_projection.clone()),
                     ..default()
                 })
-                .insert(Visibility::VISIBLE)
+                .insert(Visibility::Inherited)
                 .insert(ComputedVisibility::default())
                 .insert(RenderLayers::layer(XRAY_RENDER_LAYER))
                 .id()
@@ -286,7 +286,7 @@ impl FromWorld for CameraControls {
                 projection: Projection::Orthographic(ortho_projection),
                 ..default()
             })
-            .insert(Visibility::VISIBLE)
+            .insert(Visibility::Inherited)
             .insert(ComputedVisibility::default())
             .insert(RenderLayers::from_layers(&[
                 GENERAL_RENDER_LAYER,

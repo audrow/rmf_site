@@ -44,26 +44,24 @@ pub fn add_anchor_visual_cues(
             _ => site_assets.site_anchor_mesh.clone(),
         };
 
-        let mut commands = commands.entity(e);
-        let body = commands.add_children(|parent| {
-            let mut body = parent.spawn(PbrBundle {
+        let body = commands
+            .spawn(PbrBundle {
                 mesh: body_mesh,
                 material: site_assets.passive_anchor_material.clone(),
                 ..default()
-            });
-            body.insert(Selectable::new(e));
-            if subordinate.is_none() {
-                body.insert(DragPlaneBundle::new(e, Vec3::Z));
-            }
-            let body = body.id();
+            })
+            .insert(Selectable::new(e));
 
-            body
-        });
+        if subordinate.is_none() {
+            body.insert(DragPlaneBundle::new(e, Vec3::Z));
+        }
+        let body = body.id();
 
-        commands
+        commands.entity(e)
             .insert(AnchorVisualization { body, drag: None })
             .insert(OutlineVisualization::Anchor)
-            .insert(VisualCue::outline().irregular());
+            .insert(VisualCue::outline().irregular())
+            .add_child(body);
     }
 }
 

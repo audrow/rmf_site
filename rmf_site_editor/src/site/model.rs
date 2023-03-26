@@ -110,16 +110,15 @@ pub fn update_model_scenes(
     // model entity and make it selectable.
     for (e, h) in loading_models.0.iter() {
         if asset_server.get_load_state(h) == LoadState::Loaded {
-            let model_scene_id = commands.entity(*e).add_children(|parent| {
-                parent
+            let model_scene_id = commands
                     .spawn(SceneBundle {
                         scene: h.clone(),
                         ..default()
                     })
                     .insert(ModelSceneRoot)
                     .insert(Selectable::new(*e))
-                    .id()
-            });
+                    .id();
+            commands.entity(*e).add_child(model_scene_id);
 
             current_scenes.get_mut(*e).unwrap().scene_entity = Some(model_scene_id);
             spawned_models.0.push(*e);

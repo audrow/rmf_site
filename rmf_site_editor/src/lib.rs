@@ -56,8 +56,9 @@ struct CommandLineArgs {
     import: Option<String>,
 }
 
-#[derive(Clone, Eq, PartialEq, Debug, Hash)]
+#[derive(Clone, Default, Eq, PartialEq, Debug, Hash, States)]
 pub enum AppState {
+    #[default]
     MainMenu,
     SiteEditor,
     WarehouseGenerator,
@@ -135,11 +136,11 @@ pub fn run(command_line_args: Vec<String>) {
         app.add_plugins(
             DefaultPlugins
                 .set(WindowPlugin {
-                    window: Window {
+                    primary_window: Some(Window {
                         resolution: WindowResolution::new(1600., 900.),
                         title: "RMF Site Editor".to_owned(),
                         ..default()
-                    }
+                    }),
                     ..default()
                 })
                 .add_before::<bevy::asset::AssetPlugin, _>(SiteAssetIoPlugin),
@@ -152,7 +153,7 @@ pub fn run(command_line_args: Vec<String>) {
         .add_plugin(AabbUpdatePlugin)
         .add_plugin(EguiPlugin)
         .add_plugin(KeyboardInputPlugin)
-        .add_state(AppState::MainMenu)
+        .add_state::<AppState>()
         .add_plugin(MainMenuPlugin)
         // .add_plugin(WarehouseGeneratorPlugin)
         .add_plugin(SitePlugin)

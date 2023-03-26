@@ -129,14 +129,15 @@ pub fn change_site(
 
                     if !found_level {
                         // Create a new blank level for the user
-                        let new_level = commands.entity(cmd.site).add_children(|site| {
-                            site.spawn(SpatialBundle::default())
+                        let new_level = commands
+                                .spawn(SpatialBundle::default())
                                 .insert(LevelProperties {
                                     name: "<unnamed level>".to_string(),
                                     elevation: 0.,
                                 })
-                                .id()
-                        });
+                                .id();
+
+                        commands.entity(cmd.site).add_child(new_level);
 
                         cached_levels.0.insert(cmd.site, new_level);
                         current_level.0 = Some(new_level);

@@ -182,36 +182,35 @@ pub fn add_door_visuals(
         let (pose_tf, shape_tf, cue_inner_mesh, cue_outline_mesh) =
             make_door_visuals(e, edge, &anchors, kind);
 
+        let body = commands
+            .spawn(PbrBundle {
+                mesh: assets.box_mesh.clone(),
+                material: assets.door_body_material.clone(),
+                transform: shape_tf,
+                ..default()
+            })
+            .insert(Selectable::new(e))
+            .id();
+
+        let cue_inner = commands
+            .spawn(PbrBundle {
+                mesh: meshes.add(cue_inner_mesh),
+                material: assets.translucent_white.clone(),
+                ..default()
+            })
+            .id();
+
+        let cue_outline = commands
+            .spawn(PbrBundle {
+                mesh: meshes.add(cue_outline_mesh),
+                material: assets.translucent_black.clone(),
+                ..default()
+            })
+            .id();
+
         let mut commands = commands.entity(e);
-        let (body, cue_inner, cue_outline) = commands.add_children(|parent| {
-            let body = parent
-                .spawn(PbrBundle {
-                    mesh: assets.box_mesh.clone(),
-                    material: assets.door_body_material.clone(),
-                    transform: shape_tf,
-                    ..default()
-                })
-                .insert(Selectable::new(e))
-                .id();
 
-            let cue_inner = parent
-                .spawn(PbrBundle {
-                    mesh: meshes.add(cue_inner_mesh),
-                    material: assets.translucent_white.clone(),
-                    ..default()
-                })
-                .id();
-
-            let cue_outline = parent
-                .spawn(PbrBundle {
-                    mesh: meshes.add(cue_outline_mesh),
-                    material: assets.translucent_black.clone(),
-                    ..default()
-                })
-                .id();
-
-            (body, cue_inner, cue_outline)
-        });
+        commands.push_children(&[body, cue_inner, cue_outline]);
 
         // Level doors for lifts may have already been given a Visibility
         // component upon creation, in which case we should respect whatever

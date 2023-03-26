@@ -57,8 +57,8 @@ fn egui_ui(
     mut _commands: Commands,
     mut _exit: EventWriter<AppExit>,
     mut _load_site: EventWriter<LoadSite>,
-    mut _interaction_state: ResMut<State<InteractionState>>,
-    mut _app_state: ResMut<State<AppState>>,
+    mut _next_interaction_state: ResMut<NextState<InteractionState>>,
+    mut _next_app_state: ResMut<NextState<AppState>>,
     autoload: Option<ResMut<Autoload>>,
     loading_tasks: Query<(), With<LoadSiteFileTask>>,
 ) {
@@ -138,14 +138,8 @@ fn egui_ui(
                                         focus: true,
                                         default_file: None,
                                     });
-                                    match _app_state.set(AppState::SiteEditor) {
-                                        Ok(_) => {
-                                            _interaction_state.set(InteractionState::Enable).ok();
-                                        }
-                                        Err(err) => {
-                                            println!("Failed to enter traffic editor: {:?}", err);
-                                        }
-                                    }
+                                    _app_state.set(AppState::SiteEditor);
+                                    _next_interaction_state.set(InteractionState::Enable);
                                 }
                                 Err(err) => {
                                     println!("{err:?}");
@@ -211,8 +205,8 @@ fn egui_ui(
 fn site_file_load_complete(
     mut commands: Commands,
     mut tasks: Query<(Entity, &mut LoadSiteFileTask)>,
-    mut app_state: ResMut<State<AppState>>,
-    mut interaction_state: ResMut<State<InteractionState>>,
+    mut next_app_state: ResMut<NextState<AppState>>,
+    mut next_interaction_state: ResMut<NextState<InteractionState>>,
     mut load_site: EventWriter<LoadSite>,
 ) {
     for (entity, mut task) in tasks.iter_mut() {
@@ -223,20 +217,14 @@ fn site_file_load_complete(
             match result {
                 Some(result) => {
                     println!("Entering traffic editor");
-                    match app_state.set(AppState::SiteEditor) {
-                        Ok(_) => {
-                            let LoadSiteFileResult(file, site) = result;
-                            load_site.send(LoadSite {
-                                site,
-                                focus: true,
-                                default_file: file.map(|f| f.0),
-                            });
-                            interaction_state.set(InteractionState::Enable).ok();
-                        }
-                        Err(err) => {
-                            println!("Failed to enter traffic editor: {:?}", err);
-                        }
-                    }
+                    next_app_state.set(AppState::SiteEditor);
+                    let LoadSiteFileResult(file, site) = result;
+                    load_site.send(LoadSite {
+                        site,
+                        focus: true,
+                        default_file: file.map(|f| f.0),
+                    });
+                    next_interaction_state.set(InteractionState::Enable);
                 }
                 None => {}
             }

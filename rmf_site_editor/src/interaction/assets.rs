@@ -53,19 +53,19 @@ impl InteractionAssets {
         rotation: Quat,
         scale: f32,
     ) -> Entity {
-        return command.entity(parent).add_children(|parent| {
-            parent
-                .spawn(PbrBundle {
-                    transform: Transform::from_rotation(rotation)
-                        .with_translation(offset)
-                        .with_scale(Vec3::splat(scale)),
-                    mesh: self.arrow_mesh.clone(),
-                    material: material_set.passive.clone(),
-                    ..default()
-                })
-                .insert(DragAxisBundle::new(for_entity, Vec3::Z).with_materials(material_set))
-                .id()
-        });
+        let axis = command
+            .spawn(PbrBundle {
+                transform: Transform::from_rotation(rotation)
+                    .with_translation(offset)
+                    .with_scale(Vec3::splat(scale)),
+                mesh: self.arrow_mesh.clone(),
+                material: material_set.passive.clone(),
+                ..default()
+            })
+            .insert(DragAxisBundle::new(for_entity, Vec3::Z).with_materials(material_set))
+            .id();
+        command.entity(parent).add_child(axis);
+        axis
     }
 
     pub fn add_anchor_draggable_arrows(
@@ -74,12 +74,11 @@ impl InteractionAssets {
         anchor: Entity,
         cue: &mut AnchorVisualization,
     ) {
-        let drag_parent = command.entity(anchor).add_children(|parent| {
-            parent
+        let drag_parent = command
                 .spawn(SpatialBundle::default())
                 .insert(VisualCue::no_outline())
-                .id()
-        });
+                .id();
+        command.entity(anchor).add_child(drag_parent);
 
         let height = 0.01;
         let scale = 0.2;
