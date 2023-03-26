@@ -2,11 +2,12 @@ use super::{level::Level, lift::Lift, PortingError, Result};
 use crate::{
     legacy::optimization::align_building, Anchor, Angle, AssetSource, AssociatedGraphs,
     DisplayColor, Dock as SiteDock, Drawing as SiteDrawing, DrawingMarker,
-    Fiducial as SiteFiducial, FiducialMarker, Guided, Label, Lane as SiteLane, LaneMarker,
+    Fiducial as SiteFiducial, FiducialMarker, Guided, Lane as SiteLane, LaneMarker,
     Level as SiteLevel, LevelProperties as SiteLevelProperties, Motion, NameInSite, NavGraph,
     Navigation, OrientationConstraint, PixelsPerMeter, Pose, RankingsInLevel, ReverseLane,
     Rotation, Site, SiteProperties, DEFAULT_NAV_GRAPH_COLORS,
 };
+use crate::misc::Label;
 use glam::{DAffine2, DMat3, DQuat, DVec2, DVec3, EulerRot};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap};

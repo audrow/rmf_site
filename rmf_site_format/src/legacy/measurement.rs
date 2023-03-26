@@ -1,5 +1,6 @@
 use super::{rbmf::*, PortingError, Result};
-use crate::{Distance, Label, Measurement as SiteMeasurement};
+use crate::{Distance, Measurement as SiteMeasurement};
+use crate::misc::Label;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

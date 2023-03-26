@@ -15,7 +15,8 @@
  *
 */
 
-use crate::{Label, Point, RefTrait};
+use crate::{Point, RefTrait};
+use crate::misc::Label;
 #[cfg(feature = "bevy")]
 use bevy::prelude::{Bundle, Component, Entity};
 use serde::{Deserialize, Serialize};
